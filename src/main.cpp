@@ -8,6 +8,9 @@
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_I2CDevice.h>
 #include <credential.h>
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncElegantOTA.h>
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 #define OLED_RESET -1
@@ -34,7 +37,7 @@ int calcPercent(int level);
 void drawPercentbar(int x, int y, int width, int height, int progress);
 void displayOled(int waterLevel);
 void streamCallback(MultiPathStreamData data);
-
+AsyncWebServer server(80);
 //Function Body
 void streamTimeoutCallback(bool timeout)
 {
@@ -203,9 +206,20 @@ void setup()
     Serial.println("REASON: " + dbIn.errorReason());
     Serial.println();
   }
+  ///////////////////////////////////////OTA CODE////////////////////////////////////////////////
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/plain", "Hi! I am ESP8266.");
+  });
+
+  AsyncElegantOTA.begin(&server);    // Start ElegantOTA
+  server.begin();
+  Serial.println("HTTP server started");
+  //////////////////////////////////////OTA CODE////////////////////////////////////////////////
+
 }
 void loop()
 {
+  AsyncElegantOTA.loop();
   waterLevel = ultraSonicRead();
   // Prints the distance on the Serial Monitor
   displayOled(waterLevel);
