@@ -7,7 +7,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_I2CDevice.h>
-#include <credential.h>
+#include "credential.h"
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncElegantOTA.h>
@@ -22,7 +22,7 @@ FirebaseData dbOut;
 int tankFullLevel = 7; //cm
 int tankEmptyLevel = 78;
 const int trigPin = D7;
-const int echoPin = D8;
+const int echoPin = D0;
 const int relayPin = D5;
 int waterLevel;
 String path;
